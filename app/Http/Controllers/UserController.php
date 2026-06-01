@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Core\Services\UserService;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -14,10 +15,28 @@ class UserController extends Controller
         $this->service = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->service->listUsers();
-        return view('users.index', compact('users'));
+        $search = $request->search;
+
+        $users = $this->service->listUsers($search);
+
+        $totalUsers = User::count();
+
+        $todayUsers = User::whereDate(
+            'created_at',
+            today()
+        )->count();
+
+        return view(
+            'users.index',
+            compact(
+                'users',
+                'search',
+                'totalUsers',
+                'todayUsers'
+            )
+        );
     }
 
     public function create()
@@ -32,25 +51,43 @@ class UserController extends Controller
             'email' => 'required|email|unique:users'
         ]);
 
-        $this->service->storeUser($request->only('name','email'));
-        return redirect()->route('users.index')->with('success','User Created');
+        $this->service->storeUser(
+            $request->only('name','email')
+        );
+
+        return redirect()
+            ->route('users.index')
+            ->with('success','User Created Successfully');
     }
 
     public function edit($id)
     {
         $user = $this->service->getUser($id);
-        return view('users.edit', compact('user'));
+
+        return view(
+            'users.edit',
+            compact('user')
+        );
     }
 
     public function update(Request $request, $id)
     {
-        $this->service->updateUser($id, $request->only('name','email'));
-        return redirect()->route('users.index')->with('success','User Updated');
+        $this->service->updateUser(
+            $id,
+            $request->only('name','email')
+        );
+
+        return redirect()
+            ->route('users.index')
+            ->with('success','User Updated Successfully');
     }
 
     public function destroy($id)
     {
         $this->service->deleteUser($id);
-        return redirect()->route('users.index')->with('success','User Deleted');
+
+        return redirect()
+            ->route('users.index')
+            ->with('success','User Deleted Successfully');
     }
 }

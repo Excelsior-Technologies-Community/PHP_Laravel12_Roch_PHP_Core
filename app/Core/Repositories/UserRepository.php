@@ -6,9 +6,16 @@ use App\Models\User;
 
 class UserRepository
 {
-    public function all()
+    public function all($search = null)
     {
-        return User::latest()->get();
+        return User::when($search, function ($query) use ($search) {
+
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+
+        })
+            ->oldest()
+            ->paginate(4);
     }
 
     public function create(array $data)
@@ -28,6 +35,6 @@ class UserRepository
 
     public function delete($id)
     {
-        return User::destroy($id);
+        return User::findOrFail($id)->delete();
     }
 }

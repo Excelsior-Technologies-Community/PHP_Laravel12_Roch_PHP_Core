@@ -13,9 +13,9 @@ class UserService
         $this->repo = $repo;
     }
 
-    public function listUsers()
+    public function listUsers($search = null)
     {
-        return $this->repo->all();
+        return $this->repo->all($search);
     }
 
     public function storeUser($data)

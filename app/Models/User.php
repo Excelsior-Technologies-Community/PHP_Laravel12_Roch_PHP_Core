@@ -3,8 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model
 {
-    protected $fillable = ['name', 'email'];
+    use SoftDeletes;
+
+    protected $fillable = [
+        'name',
+        'email'
+    ];
 }
