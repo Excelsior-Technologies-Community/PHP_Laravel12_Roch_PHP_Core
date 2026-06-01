@@ -52,12 +52,12 @@ class UserController extends Controller
         ]);
 
         $this->service->storeUser(
-            $request->only('name','email')
+            $request->only('name', 'email')
         );
 
         return redirect()
             ->route('users.index')
-            ->with('success','User Created Successfully');
+            ->with('success', 'User Created Successfully');
     }
 
     public function edit($id)
@@ -74,12 +74,12 @@ class UserController extends Controller
     {
         $this->service->updateUser(
             $id,
-            $request->only('name','email')
+            $request->only('name', 'email')
         );
 
         return redirect()
             ->route('users.index')
-            ->with('success','User Updated Successfully');
+            ->with('success', 'User Updated Successfully');
     }
 
     public function destroy($id)
@@ -88,6 +88,6 @@ class UserController extends Controller
 
         return redirect()
             ->route('users.index')
-            ->with('success','User Deleted Successfully');
+            ->with('success', 'User Deleted Successfully');
     }
 }
