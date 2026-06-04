@@ -18,8 +18,12 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
+        $status = $request->status;
 
-        $users = $this->service->listUsers($search);
+        $users = $this->service->listUsers(
+            $search,
+            $status
+        );
 
         $totalUsers = User::count();
 
@@ -28,13 +32,20 @@ class UserController extends Controller
             today()
         )->count();
 
+        $activeUsers = User::where(
+            'status',
+            'active'
+        )->count();
+
         return view(
             'users.index',
             compact(
                 'users',
                 'search',
+                'status',
                 'totalUsers',
-                'todayUsers'
+                'todayUsers',
+                'activeUsers'
             )
         );
     }
@@ -48,18 +59,22 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users'
+            'email' => 'required|email|unique:users',
+            'status' => 'required'
         ]);
 
         $this->service->storeUser(
-            $request->only('name', 'email')
+            $request->only(
+                'name',
+                'email',
+                'status'
+            )
         );
 
         return redirect()
             ->route('users.index')
             ->with('success', 'User Created Successfully');
     }
-
     public function edit($id)
     {
         $user = $this->service->getUser($id);
@@ -74,7 +89,11 @@ class UserController extends Controller
     {
         $this->service->updateUser(
             $id,
-            $request->only('name', 'email')
+            $request->only(
+                'name',
+                'email',
+                'status'
+            )
         );
 
         return redirect()

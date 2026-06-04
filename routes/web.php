@@ -2,10 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return redirect('/users');
-});
+Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/users', [UserController::class,'index'])
     ->name('users.index');

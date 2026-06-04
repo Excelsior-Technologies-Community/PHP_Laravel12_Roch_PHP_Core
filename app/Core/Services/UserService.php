@@ -13,9 +13,14 @@ class UserService
         $this->repo = $repo;
     }
 
-    public function listUsers($search = null)
+    public function getWelcomeMessage()
     {
-        return $this->repo->all($search);
+        return 'Welcome to Laravel 12 Roch PHP Core';
+    }
+
+    public function listUsers($search = null, $status = null)
+    {
+        return $this->repo->all($search, $status);
     }
 
     public function storeUser($data)

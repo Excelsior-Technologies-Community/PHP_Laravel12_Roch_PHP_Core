@@ -6,16 +6,21 @@ use App\Models\User;
 
 class UserRepository
 {
-    public function all($search = null)
+    public function all($search = null, $status = null)
     {
         return User::when($search, function ($query) use ($search) {
 
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
 
-        })
+            })
+            ->when($status, function ($query) use ($status) {
+
+                $query->where('status', $status);
+
+            })
             ->oldest()
-            ->paginate(4);
+            ->paginate(3);
     }
 
     public function create(array $data)
