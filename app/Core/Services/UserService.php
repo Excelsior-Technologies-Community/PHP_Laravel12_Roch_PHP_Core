@@ -18,9 +18,14 @@ class UserService
         return 'Welcome to Laravel 12 Roch PHP Core';
     }
 
-    public function listUsers($search = null, $status = null)
+    public function listUsers($search = null, $status = null, $fromDate = null, $toDate = null)
     {
-        return $this->repo->all($search, $status);
+        return $this->repo->all($search, $status, $fromDate, $toDate);
+    }
+
+    public function listAllUsers($search = null, $status = null, $fromDate = null, $toDate = null)
+    {
+        return $this->repo->allWithoutPagination($search, $status, $fromDate, $toDate);
     }
 
     public function storeUser($data)
@@ -41,5 +46,35 @@ class UserService
     public function deleteUser($id)
     {
         return $this->repo->delete($id);
+    }
+
+    public function getInactiveUsersCount()
+    {
+        return $this->repo->getInactiveUsersCount();
+    }
+
+    public function getWeeklyUsersCount()
+    {
+        return $this->repo->getWeeklyUsersCount();
+    }
+
+    public function getMonthlyUsersCount()
+    {
+        return $this->repo->getMonthlyUsersCount();
+    }
+
+    public function getWeeklyRegistrations()
+    {
+        return $this->repo->getWeeklyRegistrations();
+    }
+
+    public function getMonthlyRegistrations()
+    {
+        return $this->repo->getMonthlyRegistrations();
+    }
+
+    public function getUserGrowthData()
+    {
+        return $this->repo->getUserGrowthData();
     }
 }
